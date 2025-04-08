@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAMPIB - Payment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaBeXSDnDt2Fy5M323rd351TADllFstTc",
+            authDomain: "kampibdb.firebaseapp.com",
+            projectId: "kampibdb",
+            storageBucket: "kampibdb.firebasestorage.app",
+            messagingSenderId: "476887652024",
+            appId: "1:476887652024:web:7773176f2095c2627fc64d"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Make db and Firebase functions globally available
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        
+        // Function to save order to Firebase
+        window.saveOrderToFirebase = async function(orderData) {
+            try {
+                console.log("Saving order data to Firebase:", orderData);
+                const ordersCollection = collection(db, "orders");
+                const docRef = await addDoc(ordersCollection, orderData);
+                console.log("Order saved successfully with ID:", docRef.id);
+                return true;
+            } catch (error) {
+                console.error("Error saving order data to Firebase:", error);
+                return false;
+            }
+        };
+    </script>
+    <style>
+        /* Reset and Base Styles */
+        :root {
+            --primary: #0073e6;
+            --primary-dark: #0056b3;
+            --secondary: #f8fafc;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --white: #ffffff;
+            --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0px 10px 25px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: var(--spacing-xl);
+        }
+
+        /* Header Section */
+        .checkout-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .brand-logo {
+            height: 36px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-title svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--success);
+        }
+
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 0 var(--spacing-lg);
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .step.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-sm);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .step-divider {
+            width: 40px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 var(--spacing-sm);
+        }
+
+        /* Main Content */
+        .checkout-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: var(--spacing-xl);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Payment Form Section */
+        .payment-section {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--spacing-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-heading {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .section-heading svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .razorpay-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .razorpay-logo {
+            height: 32px;
+        }
+
+        .payment-method-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            justify-content: center;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .payment-method {
+            flex: 0 0 calc(30% - var(--spacing-md));
+            min-width: 100px;
+            aspect-ratio: 2/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            padding: 15px;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary);
+            background: #f0f7ff;
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: #f0f7ff;
+            box-shadow: 0 2px 8px rgba(0, 115, 230, 0.2);
+        }
+
+        .payment-method.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: bold;
+            background: white;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--primary);
+        }
+
+        .payment-method img {
+            height: 36px;
+            opacity: 0.8;
+            transition: var(--transition);
+            max-width: 90%;
+        }
+
+        .payment-method[data-method="UPI"] img {
+            height: 18px; /* Make UPI logo much smaller */
+            width: auto;
+            max-width: 70%;
+        }
+
+        .payment-method:hover img {
+            opacity: 1;
+        }
+
+        #payment-form {
+            margin-top: var(--spacing-xl);
+        }
+
+        .blue-button {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .blue-button:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .payment-secure-text {
+            margin-top: var(--spacing-lg);
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+
+        .payment-secure-text svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--success);
+        }
+
+        /* Order Summary Section */
+        .order-summary-section {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--spacing-xl);
+            align-self: flex-start;
+            position: sticky;
+            top: var(--spacing-xl);
+        }
+
+        .order-summary {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: var(--border);
+            margin: var(--spacing-sm) 0;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-md) 0 var(--spacing-sm);
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .summary-savings {
+            font-size: 13px;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: #ecfdf5;
+            color: var(--success);
+            border-radius: var(--radius-sm);
+            display: inline-flex;
+            align-items: center;
+            margin-top: var(--spacing-sm);
+            font-weight: 500;
+        }
+
+        .summary-savings svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--success);
+            margin-right: var(--spacing-xs);
+        }
+
+        .order-details {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border);
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .order-item-image {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            background: var(--secondary);
+            margin-right: var(--spacing-md);
+            object-fit: contain;
+            padding: var(--spacing-xs);
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .order-item-price {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: var(--spacing-lg);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .loading-status {
+            margin-top: var(--spacing-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .checkout-footer {
+            margin-top: var(--spacing-lg);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 10px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary-section {
+                position: static;
+                margin-bottom: var(--spacing-xl);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: var(--spacing-lg) var(--spacing-md);
+            }
+
+            .checkout-steps {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-methods {
+                gap: var(--spacing-sm);
+            }
+
+            .payment-method {
+                flex: 1 0 calc(50% - var(--spacing-sm));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing Payment...</div>
+        <div class="loading-status" id="loadingStatus"></div>
+    </div>
+
+    <div class="page-container">
+        <!-- Header -->
+        <div class="checkout-header">
+            <h1 class="page-title">
+                Secure Payment.
+            </h1>
+            
+            <div class="checkout-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <span>Shipping</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <span>Payment</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span>Confirmation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="checkout-container">
+            <!-- Payment Form -->
+            <div class="payment-section">
+                <h2 class="section-heading">
+                </h2>
+                
+                <div class="razorpay-logo-container">
+                    <img src="https://razorpay.com/blog-content/uploads/2020/10/rzp-glyph-positive.png" alt="Razorpay" class="razorpay-logo">
+                </div>
+                
+                <form id="payment-form">
+                    <input type="hidden" name="amount" id="amount" value="0">
+                    <input type="hidden" name="payment-method" id="selected-payment-method" value="Razorpay">
+                    <button type="button" id="pay-button" class="blue-button">Proceed to Pay</button>
+                </form>
+                
+                <div class="payment-secure-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    All transactions are secure and encrypted
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="order-summary-section">
+                <h2 class="section-heading">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0073e6">
+                        <path d="M19 3H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
+                    </svg>
+                    Order Summary
+                </h2>
+                
+                <div class="order-details">
+                    <div class="order-item">
+                        <div class="order-item-details" style="width: 100%;">
+                            <div class="order-item-name" style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">
+                                <span style="color: var(--text-secondary);">Product: </span>
+                                <span id="product-name-display"></span>
+                            </div>
+                            <div class="order-item-price">Qty: 1</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="summary-item">
+                    <span>Subtotal</span>
+                    <span id="product-price">₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Shipping</span>
+                    <span>₹0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Tax (18% GST)</span>
+                    <span id="tax-amount">₹0.00</span>
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="total-amount">₹0.00</span>
+                </div>
+                
+                <div class="summary-savings">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Free shipping applied
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="checkout-footer">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Refund Policy</a>
+                <a href="#">Contact Support</a>
+            </div>
+            <p>© 2025 KAMPIB</p>
+        </div>
+    </div>
+
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        // Parse URL parameters to get payment amount and other details
+        let urlParams;  // Declare urlParams in the global scope
+
+        window.onload = function() {
+            urlParams = new URLSearchParams(window.location.search);
+            const amount = urlParams.get('amount') || '1999.00';
+            const productName = urlParams.get('product_name') || urlParams.get('productName') || 'KAMPIB Product';
+            const customerPhone = urlParams.get('customer_phone') || urlParams.get('phone') || '';
+            
+            // Debug log to check URL parameters
+            console.log('Full URL:', window.location.href);
+            console.log('Search params:', window.location.search);
+            console.log('URL Parameters parsed:', { 
+                amount, 
+                productName, 
+                phone: customerPhone || 'Not provided',
+                all_params: Object.fromEntries(urlParams)
+            });
+            
+            // Set a default phone only if it's truly empty
+            const phoneToUse = customerPhone || '9999999999';
+            
+            // Convert to paisa (Razorpay uses lowest currency unit)
+            const amountInPaisa = Math.round(parseFloat(amount) * 100);
+            document.getElementById('amount').value = amountInPaisa;
+            
+            // Calculate tax (18% GST)
+            const amountValue = parseFloat(amount);
+            const taxAmount = amountValue * 0.18;
+            const totalAmount = amountValue + taxAmount;
+            
+            // Update the order summary with exact product name
+            document.getElementById('product-name-display').textContent = decodeURIComponent(productName);
+            
+            document.getElementById('product-price').textContent = `₹${amountValue.toFixed(2)}`;
+            document.getElementById('tax-amount').textContent = `₹${taxAmount.toFixed(2)}`;
+            document.getElementById('total-amount').textContent = `₹${totalAmount.toFixed(2)}`;
+            
+            // Set up Razorpay button
+            const payButton = document.getElementById('pay-button');
+            if (payButton) {
+                payButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Pay button clicked');
+                    console.log('Using phone number:', phoneToUse);
+                    
+                    // Convert total amount (including GST) to paisa
+                    const totalAmountInPaisa = Math.round(totalAmount * 100);
+                    try {
+                        payWithRazorpay(totalAmountInPaisa, productName, totalAmount.toFixed(2), 'Razorpay', phoneToUse);
+                    } catch (err) {
+                        console.error('Error when initiating payment:', err);
+                        alert('Could not initiate payment process. Please try again.');
+                    }
+                });
+                console.log('Pay button event listener attached');
+            } else {
+                console.error('Pay button not found in the DOM!');
+            }
+        };
+        
+        // Function to update inventory stock in localStorage - stock only decreases after successful payment
+        function updateInventoryStock(productName) {
+            try {
+                // Get inventory from localStorage
+                const storedInventory = localStorage.getItem('kampib_inventory');
+                if (storedInventory) {
+                    const inventory = JSON.parse(storedInventory);
+                    
+                    // Find the product
+                    const product = inventory.find(p => p.name === productName);
+                    if (product && product.stock > 0) {
+                        // Decrease stock count ONLY AFTER successful payment
+                        product.stock -= 1;
+                        
+                        // Save updated inventory back to localStorage
+                        localStorage.setItem('kampib_inventory', JSON.stringify(inventory));
+                        console.log(`Stock decreased for ${productName}. New stock: ${product.stock}`);
+                        return true;
+                    } else if (product) {
+                        console.warn(`Cannot decrease stock for ${productName}. Current stock: ${product.stock}`);
+                    } else {
+                        console.warn(`Product ${productName} not found in inventory`);
+                    }
+                } else {
+                    console.warn('No inventory found in localStorage');
+                }
+                return false;
+            } catch (e) {
+                console.error('Error updating inventory stock:', e);
+                return false;
+            }
+        }
+        
+        // Function to save order to Firebase
+        async function saveOrderToFirebase(paymentId, paymentMethod, productName, amount, customerInfo) {
+            try {
+                const timestamp = new Date();
+                const formattedDate = timestamp.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const formattedTime = timestamp.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // Create order data object
+                const orderData = {
+                    invoiceNumber: urlParams.get('invoice_number') || `INV-${Math.floor(10000 + Math.random() * 90000)}`,
+                    transactionId: paymentId,
+                    orderDate: formattedDate,
+                    orderTime: formattedTime,
+                    paymentMode: paymentMethod,
+                    amount: parseFloat(amount),
+                    createdAt: new Date().toISOString(),
+                    customerName: customerInfo.name || 'Not provided',
+                    customerEmail: customerInfo.email || 'Not provided',
+                    customerPhone: customerInfo.phone || 'Not provided',
+                    customerAddress: customerInfo.address || 'Not provided',
+                    productName: productName
+                };
+                
+                console.log("Saving order to Firebase:", orderData);
+                
+                // Use the global Firebase function to save
+                if (typeof window.saveOrderToFirebase === 'function') {
+                    return await window.saveOrderToFirebase(orderData);
+                } else {
+                    console.error("Firebase save function not available");
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error saving order to Firebase:", error);
+                return false;
+            }
+        }
+        
+        function payWithRazorpay(amount, productName, displayAmount, paymentMethod, customerPhone) {
+            // Show loading overlay
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = document.querySelector('.loading-text');
+            const loadingStatus = document.getElementById('loadingStatus');
+            
+            console.log('Initializing Razorpay with amount:', amount, 'for product:', productName);
+            console.log('Customer phone for Razorpay:', customerPhone);
+            
+            // Format the phone number
+            let formattedPhone = customerPhone || '';
+            formattedPhone = formattedPhone.replace(/\D/g, '');
+            if (formattedPhone.length === 10) {
+                formattedPhone = '+91' + formattedPhone;
+            }
+            
+            // Razorpay options
+            const options = {
+                key: "rzp_test_WgnaixpqQ0o0Ly", 
+                amount: amount,
+                currency: "INR",
+                name: "Kampib Pvt. Ltd.",
+                description: productName || "KAMPIB Product",
+                image: "https://via.placeholder.com/180x36/0073e6/ffffff?text=KAMPIB",
+                handler: function (response) {
+                    // Payment was successful
+                    const paymentId = response.razorpay_payment_id;
+                    console.log('Payment successful! Payment ID:', paymentId);
+                    
+                    loadingOverlay.style.display = 'flex';
+                    loadingStatus.textContent = `${paymentMethod} payment successful! Generating receipt...`;
+                    
+                    // Update inventory stock count
+                    updateInventoryStock(productName);
+                    
+                    // Get customer information from URL parameters
+                    const customerName = urlParams.get('customer_name') || '';
+                    const customerEmail = urlParams.get('customer_email') || '';
+                    const customerAddress = urlParams.get('customer_address') || urlParams.get('custAddr') || '';
+                    const custPhone = urlParams.get('customer_phone') || '';
+                    
+                    // Save order to Firebase
+                    saveOrderToFirebase(paymentId, paymentMethod, productName, displayAmount, {
+                        name: customerName,
+                        email: customerEmail, 
+                        phone: custPhone || customerPhone,
+                        address: customerAddress
+                    }).then(success => {
+                        console.log("Order saved to Firebase:", success);
+                        
+                        // Determine if this is a service request or a product purchase
+                        const isServiceRequest = urlParams.has('referenceId') || urlParams.has('serviceType');
+                        console.log("Is this a service request?", isServiceRequest);
+                        
+                        // Create URL with parameters for the appropriate receipt/confirmation page
+                        let redirectURL;
+                        
+                        if (isServiceRequest) {
+                            // For service requests, redirect to servicedetails.html
+                            const timestamp = new Date().toISOString();
+                            redirectURL = `../../../Frontend/Service Module/servicedetails.html?` +
+                                `referenceId=${encodeURIComponent(urlParams.get('referenceId') || '')}` +
+                                `&docId=${encodeURIComponent(urlParams.get('docId') || '')}` +
+                                `&custName=${encodeURIComponent(customerName)}` +
+                                `&custPhone=${encodeURIComponent(formattedPhone || customerPhone)}` +
+                                `&custEmail=${encodeURIComponent(customerEmail)}` +
+                                `&custAddr=${encodeURIComponent(customerAddress)}` +
+                                `&laptopBrand=${encodeURIComponent(urlParams.get('laptopBrand') || '')}` +
+                                `&laptopModel=${encodeURIComponent(urlParams.get('laptopModel') || '')}` +
+                                `&laptopAge=${encodeURIComponent(urlParams.get('laptopAge') || '')}` +
+                                `&problemDetails=${encodeURIComponent(urlParams.get('problemDetails') || '')}` +
+                                `&pickupDate=${encodeURIComponent(urlParams.get('pickupDate') || '')}` +
+                                `&pickupTime=${encodeURIComponent(urlParams.get('pickupTime') || '')}` +
+                                `&serviceType=${encodeURIComponent(urlParams.get('serviceType') || '')}` +
+                                `&amount=${encodeURIComponent(displayAmount)}` +
+                                `&submittedAt=${encodeURIComponent(timestamp)}` +
+                                `&transaction_id=${encodeURIComponent(paymentId)}` +
+                                `&payment_type=${encodeURIComponent(paymentMethod)}` +
+                                `&saved_to_firebase=true`;
+                        } else {
+                            // For product purchases, redirect to receipt.html
+                            redirectURL = `../Receipt Generation/receipt.html?` +
+                                `amount=${urlParams.get('amount') || displayAmount}` +
+                                `&payment_type=${urlParams.get('payment_type') || paymentMethod}` +
+                                `&invoice_number=${urlParams.get('invoice_number') || ''}` +
+                                `&transaction_id=${paymentId}` +
+                                `&timestamp=${new Date().toISOString()}` +
+                                `&customer_name=${urlParams.get('customer_name') || ''}` +
+                                `&customer_phone=${urlParams.get('customer_phone') || customerPhone}` +
+                                `&customer_email=${urlParams.get('customer_email') || ''}` +
+                                `&customer_address=${urlParams.get('customer_address') || ''}` +
+                                `&product_name=${urlParams.get('product_name') || productName}`;
+                        }
+                        
+                        console.log('Redirect URL:', redirectURL);
+                        
+                        // Set a timeout to simulate processing time
+                        setTimeout(() => {
+                            // Redirect to appropriate page
+                            window.location.href = redirectURL;
+                        }, 2000);
+                    });
+                },
+                prefill: {
+                    name: "Test Customer",
+                    email: "customer@example.com",
+                    contact: formattedPhone || '9999999999'
+                },
+                notes: {
+                    payment_method: paymentMethod
+                },
+                theme: {
+                    color: "#0073e6"
+                },
+                modal: {
+                    ondismiss: function() {
+                        // User closed the Razorpay payment window
+                        console.log('Razorpay window dismissed by user');
+                        loadingOverlay.style.display = 'none';
+                    }
+                }
+            };
+            
+            try {
+                loadingStatus.textContent = `Opening ${paymentMethod} payment gateway...`;
+                loadingOverlay.style.display = 'flex';
+                loadingText.style.opacity = '1';
+                loadingStatus.style.opacity = '1';
+                
+                // Create Razorpay instance and open payment window
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response){
+                    console.error("Payment failed:", response.error);
+                    alert("Payment failed: " + response.error.description);
+                    loadingOverlay.style.display = 'none';
+                });
+                
+                // Short timeout to ensure the loading overlay appears first
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    rzp.open();
+                }, 300);
+                
+            } catch (error) {
+                console.error("Error initializing Razorpay:", error);
+                alert("Could not initialize payment gateway. Please try again later.");
+                loadingOverlay.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

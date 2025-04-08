@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAMPIB - Login</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #60a5fa;
+            --text-color: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            color: var(--text-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+            text-align: center;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            max-width: 900px;
+            margin: 20px auto 20px;
+            background: var(--card-bg);
+            padding: 15px 70px 25px;
+            border-radius: 0;
+            box-shadow: none;
+            flex: 1;
+        }
+
+        h4#form-title {
+            margin: 5px 0 15px;
+            font-size: 22px;
+        }
+
+        /* Header styles from laptopsub.html */
+        header {
+            background: black;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 12px 40px;
+            position: relative;
+            z-index: 2;
+            border-bottom: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            transform: translateZ(0);
+            will-change: transform;
+            margin-bottom: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        .menu-bar {
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 0;
+            border-radius: 0;
+            margin-top: 0;
+            border: none;
+            width: auto;
+        }
+
+        .menu-list {
+            display: flex;
+            justify-content: flex-end;
+            gap: 40px;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu-list li a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 0;
+            border-radius: 0;
+            position: relative;
+            text-shadow: none;
+            background: transparent;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+        }
+
+        .menu-list li a:before {
+            display: none;
+        }
+
+        .menu-list li a:hover {
+            color: #ffffff;
+            background: transparent;
+            transform: none;
+            box-shadow: none;
+            letter-spacing: -0.01em;
+        }
+
+        .menu-list li a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #ffffff;
+            transition: width 0.2s ease;
+            transform: none;
+            opacity: 0;
+        }
+
+        .menu-list li a:hover::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 38px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin-bottom: 5px;
+            transform: none;
+            animation: none;
+            filter: none;
+            display: inline-block;
+            line-height: 1.1;
+        }
+
+        header h1::after {
+            display: none;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin: 12px 0;
+            cursor: pointer;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .signup-btn { 
+            background-color: #28a745; 
+        }
+        
+        .signup-btn:hover {
+            background-color: #218838;
+        }
+        
+        .login-btn { 
+            background-color: var(--primary-color); 
+        }
+        
+        .login-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .form-container {
+            padding: 0 15px;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        #login-email-form, #login-phone-form, #signup-form {
+            transition: opacity 0.3s ease;
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .login-tabs {
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 15px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 8px 15px;
+            cursor: pointer;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            width: 100%;
+        }
+
+        .login-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .login-tab:hover:not(.active) {
+            color: #4b5563;
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .form-group {
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--text-color);
+        }
+
+        .toggle-form {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-form a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        footer {
+            background: white;
+            color: var(--text-secondary);
+            padding: 10px;
+            text-align: center;
+            border-top: none;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            font-size: 13px;
+            margin-top: -30px;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--primary-light);
+        }
+
+        /* Login method tabs */
+        .login-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .login-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .login-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .login-tab:hover:not(.active) {
+            color: var(--text-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        /* Phone input */
+        .phone-input-container {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .country-code {
+            width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .phone-input {
+            flex-grow: 1;
+        }
+
+        /* OTP verification */
+        .otp-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+            margin: 15px 0;
+        }
+        
+        .otp-input {
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            font-size: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        
+        .resend-otp {
+            font-size: 14px;
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-top: 10px;
+            text-align: right;
+        }
+        
+        .resend-otp:hover {
+            text-decoration: underline;
+        }
+
+        /* Or divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .divider span {
+            padding: 0 10px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Video Footer */
+        .footer-video {
+            width: 40%;
+            max-width: 550px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: none;
+            margin: 8px auto 8px 45%;
+            display: block;
+            transform: translateX(-50%);
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .video-section {
+            background: #ffffff;
+            width: 100%;
+            padding: 3px 0;
+            margin: 0;
+            text-align: left;
+            position: relative;
+            border-top: none;
+            overflow: hidden;
+        }
+
+        /* Hide video when signup form is visible */
+        body.signup-mode .video-section {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .footer-video {
+                width: 70%;
+                margin: 10px auto;
+                transform: none;
+            }
+            
+            .login-container {
+                padding: 20px 30px;
+                margin: 10px auto 20px;
+            }
+            
+            .brand-name {
+                font-size: 50px;
+                margin-bottom: 15px;
+            }
+            
+            h2 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            input, button {
+                padding: 8px;
+                font-size: 15px;
+            }
+            
+            .social-login-container {
+                margin-top: 10px;
+            }
+            
+            .signup-form {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .signup-form .form-group {
+                margin: 6px 0;
+            }
+            
+            footer {
+                padding: 8px 5px;
+            }
+            
+            footer p {
+                font-size: 12px;
+                line-height: 1.3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-video {
+                width: 90%;
+                margin: 5px auto;
+            }
+            
+            .login-container {
+                padding: 15px 20px;
+                margin: 5px auto 10px;
+            }
+            
+            .brand-name {
+                font-size: 42px;
+                margin-bottom: 12px;
+            }
+            
+            .form-row {
+                display: block !important;
+            }
+            
+            .video-section {
+                padding: 3px 0;
+            }
+            
+            footer p {
+                font-size: 11px;
+            }
+        }
+
+        /* Forgot Password Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-title {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        /* Success Message Styles */
+        #success-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Fix visibility of signup form */
+        #signup-form {
+            transition: opacity 0.3s ease;
+        }
+        
+        #signup-form.visible {
+            display: block !important;
+            opacity: 1 !important;
+        }
+        
+        /* Vertical signup form */
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .signup-form .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .signup-form button {
+            margin-top: 15px;
+        }
+        
+        /* Direct signup button for fallback */
+        .direct-signup-btn {
+            display: none; /* Hide this since it's causing issues */
+        }
+        
+        /* Show direct button when issues are detected */
+        .direct-signup-btn.show {
+            display: none; /* Hide this since it's causing issues */
+        }
+
+        /* Media Queries */
+        @media (min-height: 800px) {
+            .login-container {
+                margin-top: 8vh;
+            }
+        }
+
+        @media (max-height: 800px) {
+            .login-container {
+                margin-top: 10px;
+            }
+            
+            .form-group {
+                margin: 8px 0;
+            }
+            
+            input, button {
+                padding: 8px;
+            }
+        }
+
+        footer {
+            margin-top: 0;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="header-content">
+                <h1>KAMPIB.</h1>
+            </div>
+            <div class="menu-bar">
+                <ul class="menu-list">
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../../Frontend/Sales Module/laptopsub.html">Products</a></li>
+                    <li><a href="../../Frontend/Service Module/services.html">Services</a></li>
+                    <li><a href="../../about.html">About</a></li>
+                    <li><a href="../../contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <h4 id="form-title">Login to Your Account.</h4>
+        
+        <!-- Login Form -->
+        <div id="login-form">
+            <div class="login-tabs">
+                <button class="login-tab active" id="login-email-tab">Email Login</button>
+                <button class="login-tab" id="login-phone-tab" style="display: none;">Phone Login</button>
+            </div>
+            
+            <!-- Email Login Form -->
+            <div id="login-email-section">
+                <form id="login-email-form" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
+                        <div class="error-message" id="login-email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
+                        <div class="error-message" id="login-password-error"></div>
+                    </div>
+                    
+                    <button type="button" class="login-btn" id="login-btn" onclick="handleLogin(event)">Login</button>
+                    
+                    <div class="forgot-password">
+                        <a href="#" id="forgot-password-link">Forgot Password?</a>
+                    </div>
+                    
+                    <!-- Login Failed Message (Initially Hidden) -->
+                    <div class="error-message" id="login-failed-message" style="display: none; text-align: center; margin-top: 10px; font-size: 14px; color: #dc2626; padding: 8px; border-radius: 5px; background-color: #fee2e2;"></div>
+                </form>
+            </div>
+            
+            <!-- Phone Login Form - Removed -->
+            <div id="login-phone-section" style="display: none;">
+            </div>
+            
+            <div class="toggle-form">
+                Don't have an account? <a id="show-signup">Sign up</a>
+            </div>
+        </div>
+        
+        <!-- Signup Form (Initially Hidden) -->
+        <div id="signup-form" style="display: none;">
+            <div class="form-group">
+                <label for="signup-name">Full Name</label>
+                <input type="text" id="signup-name" placeholder="Your full name">
+                <div class="error-message" id="signup-name-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" placeholder="your@email.com">
+                <div class="error-message" id="signup-email-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" placeholder="Create a strong password" style="width: 100%;">
+                <div class="error-message" id="signup-password-error"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="signup-confirm">Confirm Password</label>
+                <input type="password" id="signup-confirm" placeholder="Confirm your password" style="width: 100%;">
+                <div class="error-message" id="signup-confirm-error"></div>
+            </div>
+            
+            <button class="signup-btn" id="signup-btn">Create Account</button>
+            
+            <div class="toggle-form">
+                Already have an account? <a id="show-login">Login</a>
+            </div>
+        </div>
+        
+        <!-- Login Success Message (Initially Hidden) -->
+        <div id="success-message" style="display: none;"></div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgot-password-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <h3 class="modal-title">Reset Your Password</h3>
+            <p style="margin-bottom: 15px; color: var(--text-secondary); font-size: 14px;">Enter your email address and we'll send you a link to reset your password.</p>
+            
+            <div class="form-group">
+                <label for="reset-email">Email Address</label>
+                <input type="email" id="reset-email" placeholder="your@email.com">
+                <div class="error-message" id="reset-email-error"></div>
+            </div>
+            
+            <button type="button" class="login-btn" id="reset-password-btn">Send Reset Link</button>
+            
+            <!-- Reset Success Message (Initially Hidden) -->
+            <div id="reset-success-message" style="display: none; margin-top: 12px; padding: 8px; background-color: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 5px; text-align: center; font-size: 14px;"></div>
+            
+            <!-- Reset Error Message (Initially Hidden) -->
+            <div id="reset-error-message" style="display: none; margin-top: 12px; padding: 8px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 5px; text-align: center; font-size: 14px;"></div>
+        </div>
+    </div>
+    <script>
+        // Add debug utilities to help diagnose the signup form issue
+        function debugFormVisibility() {
+            console.log("DEBUG: Checking form visibility");
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            
+            console.log("Login form display:", loginForm ? loginForm.style.display : "not found");
+            console.log("Signup form display:", signupForm ? signupForm.style.display : "not found");
+            console.log("Body has signup-mode class:", document.body.classList.contains('signup-mode'));
+        }
+        
+        // Global function for handling login button click
+        function handleLogin(event) {
+            event.preventDefault();
+            console.log("Login button clicked via global handler");
+            
+            // Check if Firebase is ready
+            if (!window.firebaseReady) {
+                console.log("Firebase is not yet ready, waiting...");
+                // Show loading message to user
+                const loginBtn = document.getElementById('login-btn');
+                loginBtn.textContent = 'Initializing...';
+                loginBtn.disabled = true;
+                
+                // Wait longer for Firebase to initialize
+                setTimeout(() => {
+                    if (window.firebaseReady) {
+                        console.log("Firebase is now ready after waiting");
+                        handleLogin(event); // Try again
+                    } else {
+                        console.error("Firebase still not ready after extended waiting period");
+                        alert("Login system is still initializing. Please wait a moment and try again.");
+                        
+                        // Reset button state
+                        loginBtn.textContent = 'Login';
+                        loginBtn.disabled = false;
+                    }
+                }, 2000); // Wait 2 seconds
+                
+                return; // Exit function and wait
+            }
+            
+            // Define these functions if they don't exist yet
+            if (typeof clearAllErrors !== 'function') {
+                window.clearAllErrors = function() {
+                    const errorElements = document.querySelectorAll('.error-message');
+                    errorElements.forEach(element => {
+                        element.textContent = '';
+                        element.style.display = 'none';
+                    });
+                };
+            }
+            
+            if (typeof clearLoginFailedMessage !== 'function') {
+                window.clearLoginFailedMessage = function() {
+                    const loginFailedMessage = document.getElementById('login-failed-message');
+                    if (loginFailedMessage) {
+                        loginFailedMessage.textContent = '';
+                        loginFailedMessage.style.display = 'none';
+                    }
+                };
+            }
+            
+            if (typeof showLoginFailedMessage !== 'function') {
+                window.showLoginFailedMessage = function(message) {
+                    const loginFailedMessage = document.getElementById('login-failed-message');
+                    if (loginFailedMessage) {
+                        loginFailedMessage.textContent = message;
+                        loginFailedMessage.style.display = 'block';
+                    } else {
+                        console.error("Login failed message element not found:", message);
+                    }
+                };
+            }
+            
+            // Clear previous errors using the functions we ensured exist
+            clearAllErrors();
+            clearLoginFailedMessage();
+            
+            // Get form values directly
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password');
+            
+            console.log("Email input found:", email ? "Yes" : "No", "Password input found:", password ? "Yes" : "No");
+            
+            if (!email || !password.value) {
+                console.log("Email or password is empty, can't proceed with login");
+                // Add red border to empty fields for visual feedback
+                if (!email) document.getElementById('login-email').style.borderColor = 'red';
+                if (!password.value) password.style.borderColor = 'red';
+                
+                // Show general login error message
+                showLoginFailedMessage("Please enter both email and password");
+                return;
+            }
+            
+            // Show loading state on button
+            const loginBtn = document.getElementById('login-btn');
+            loginBtn.textContent = 'Logging in...';
+            loginBtn.disabled = true;
+            
+            // Try direct execution
+            try {
+                console.log("Attempting to call loginWithEmailAndPassword directly");
+                // Ensure email is properly formatted (lowercase)
+                const formattedEmail = email.toLowerCase();
+                
+                // If window.loginWithEmailAndPassword isn't available yet, wait a moment and try again
+                if (typeof window.loginWithEmailAndPassword !== 'function') {
+                    console.log("Login function not available yet, waiting briefly...");
+                    setTimeout(() => {
+                        if (typeof window.loginWithEmailAndPassword === 'function') {
+                            console.log("Login function now available, proceeding");
+                            window.loginWithEmailAndPassword(formattedEmail, password.value);
+                        } else {
+                            console.error("Login function still not available after waiting");
+                            
+                            // Try to manually define the login function as a fallback
+                            if (window.firebaseReady && typeof signInWithEmailAndPassword === 'function' && auth) {
+                                console.log("Manually defining login function as fallback");
+                                window.loginWithEmailAndPassword = function(email, password) {
+                                    signInWithEmailAndPassword(auth, email, password)
+                                        .then((userCredential) => {
+                                            // Set login status
+                                            localStorage.setItem('isLoggedIn', 'true');
+                                            localStorage.setItem('userEmail', userCredential.user.email);
+                                            
+                                            // Set username and photo
+                                            const displayName = userCredential.user.displayName || email.split('@')[0];
+                                            localStorage.setItem('userName', displayName);
+                                            localStorage.setItem('userPhoto', userCredential.user.photoURL || 
+                                                `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=2563eb&color=fff`);
+                                            
+                                            // Redirect
+                                            window.location.href = 'profile.html';
+                                        })
+                                        .catch((error) => {
+                                            console.error("Login error:", error);
+                                            alert("Login failed: " + error.message);
+                                            
+                                            loginBtn.textContent = 'Login';
+                                            loginBtn.disabled = false;
+                                        });
+                                };
+                                
+                                // Try login with our manual function
+                                window.loginWithEmailAndPassword(formattedEmail, password.value);
+                            } else {
+                                showLoginFailedMessage("Login system not fully loaded. Please refresh the page and try again.");
+                                
+                                // Reset login button state
+                                loginBtn.textContent = 'Login';
+                                loginBtn.disabled = false;
+                            }
+                        }
+                    }, 1500); // Increased timeout to 1.5s
+                } else {
+                    // Function is available, proceed directly
+                    window.loginWithEmailAndPassword(formattedEmail, password.value);
+                }
+            } catch (e) {
+                console.error("Direct call failed:", e);
+                showLoginFailedMessage("Login failed: " + e.message);
+                
+                // Reset login button state
+                loginBtn.textContent = 'Login';
+                loginBtn.disabled = false;
+                
+                // Fallback to triggering the event listener
+                console.log("Falling back to event triggering");
+                if (loginBtn) {
+                    try {
+                        // Create and dispatch a custom click event
+                        const clickEvent = new Event('click');
+                        loginBtn.dispatchEvent(clickEvent);
+                    } catch (eventError) {
+                        console.error("Error dispatching click event:", eventError);
+                        
+                        // Final fallback - try to submit the form directly
+                        const loginForm = document.getElementById('login-email-form');
+                        if (loginForm) {
+                            try {
+                                const submitEvent = new Event('submit');
+                                loginForm.dispatchEvent(submitEvent);
+                            } catch (submitError) {
+                                console.error("Error submitting form:", submitError);
+                                showLoginFailedMessage("Critical error. Please refresh and try again.");
+                            }
+                        }
+                    }
+                } else {
+                    console.error("Login button not found");
+                    showLoginFailedMessage("Login button not found. Please refresh the page and try again.");
+                }
+            }
+        }
+    </script>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      console.log("Starting Firebase initialization...");
+      
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+      import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword,
+        updateProfile,
+        sendPasswordResetEmail,
+        sendEmailVerification
+      } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+      
+      import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        getDoc,
+        collection,
+        addDoc,
+        query,
+        where,
+        getDocs,
+        deleteDoc,
+        serverTimestamp
+      } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+      console.log("Firebase modules imported successfully");
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCaBeXSDnDt2Fy5M323rd351TADllFstTc",
+        authDomain: "kampibdb.firebaseapp.com",
+        projectId: "kampibdb",
+        storageBucket: "kampibdb.firebasestorage.app",
+        messagingSenderId: "476887652024",
+        appId: "1:476887652024:web:7773176f2095c2627fc64d"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      console.log("Firebase app initialized:", app.name);
+      
+      const auth = getAuth(app);
+      console.log("Firebase auth initialized:", auth ? "Yes" : "No");
+      
+      const db = getFirestore(app);
+      console.log("Firestore initialized:", db ? "Yes" : "No");
+      
+      // Set a global flag when Firebase is ready
+      window.firebaseReady = true;
+      console.log("Firebase components are ready for use");
+      
+      // Global variables for OTP verification - removed phone-related variables
+      let emailTimer;
+      let pendingEmailVerificationId = null;
+      
+      // Email verification popup
+      let verificationModalDisplayed = false;
+
+      // DOM elements
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const showSignupLink = document.getElementById('show-signup');
+      const showLoginLink = document.getElementById('show-login');
+      const formTitle = document.getElementById('form-title');
+      
+      // Simple toggle functions
+      function showSignupForm() {
+        console.log("Showing signup form");
+        if (loginForm) loginForm.style.display = 'none';
+        if (signupForm) {
+          signupForm.style.display = 'block';
+          signupForm.style.opacity = '1';
+          // Force visibility with !important
+          signupForm.setAttribute('style', 'display: block !important; opacity: 1 !important');
+        }
+        if (formTitle) formTitle.textContent = 'Create a New Account.';
+        document.body.classList.add('signup-mode');
+        
+        // Hide video section
+        const videoSection = document.querySelector('.video-section');
+        if (videoSection) videoSection.style.display = 'none';
+        
+        // Clear any error messages
+        clearAllErrors();
+      }
+      
+      function showLoginForm() {
+        console.log("Showing login form");
+        if (signupForm) signupForm.style.display = 'none';
+        if (loginForm) loginForm.style.display = 'block';
+        if (formTitle) formTitle.textContent = 'Login to Your Account.';
+        document.body.classList.remove('signup-mode');
+        
+        // Show video section
+        const videoSection = document.querySelector('.video-section');
+        if (videoSection) videoSection.style.display = 'block';
+        
+        // Clear any error messages
+        clearAllErrors();
+      }
+      
+      // Add click event listeners for the toggle links
+      if (showSignupLink) {
+        showSignupLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          showSignupForm();
+        });
+      }
+      
+      if (showLoginLink) {
+        showLoginLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          showLoginForm();
+        });
+      }
+
+      // Form validation
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+      
+      function validatePhone(phone) {
+        const re = /^[0-9]{10}$/;
+        return re.test(phone);
+      }
+
+      function showError(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+      }
+
+      function clearError(elementId) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.textContent = '';
+        errorElement.style.display = 'none';
+      }
+
+      function clearAllErrors() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach(element => {
+          element.textContent = '';
+          element.style.display = 'none';
+        });
+      }
+      
+      // Email OTP timer
+      function startEmailOtpTimer() {
+        let count = 60;
+        document.getElementById('email-countdown').textContent = count;
+        document.getElementById('resend-email-otp').style.pointerEvents = 'none';
+        document.getElementById('resend-email-otp').style.opacity = '0.5';
+        
+        clearInterval(emailTimer);
+        emailTimer = setInterval(() => {
+          count--;
+          document.getElementById('email-countdown').textContent = count;
+          
+          if (count <= 0) {
+            clearInterval(emailTimer);
+            document.getElementById('resend-email-otp').innerHTML = 'Resend Code';
+            document.getElementById('resend-email-otp').style.pointerEvents = 'auto';
+            document.getElementById('resend-email-otp').style.opacity = '1';
+          }
+        }, 1000);
+      }
+      
+      // Get email OTP from inputs
+      function getEmailOtpValue() {
+        let otp = '';
+        document.querySelectorAll('.email-otp-input').forEach(input => {
+          otp += input.value;
+        });
+        return otp;
+      }
+      
+      // Clear email OTP inputs
+      function clearEmailOtpInputs() {
+        document.querySelectorAll('.email-otp-input').forEach(input => {
+          input.value = '';
+        });
+        document.querySelector('.email-otp-input[data-index="1"]').focus();
+      }
+
+      // Email Login functionality - IMPROVED
+      function loginWithEmailAndPassword(email, password) {
+        console.log("Executing loginWithEmailAndPassword function with:", email);
+        
+        // Clear any previous error messages
+        clearAllErrors();
+        clearLoginFailedMessage();
+        
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            console.log("Login successful");
+            
+            // Get user data
+            const user = userCredential.user;
+            
+            // Reload the user to get the latest emailVerified status
+            return user.reload().then(() => {
+              console.log("User reloaded, emailVerified:", user.emailVerified);
+              return user;
+            }).catch(error => {
+              console.error("Error reloading user:", error);
+              return user; // Return original user on error
+            });
+          })
+          .then((user) => {
+            const displayName = user.displayName || email.split('@')[0];
+            const photoURL = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=2563eb&color=fff`;
+            
+            // Check if email is verified
+            if (!user.emailVerified) {
+              console.log("Email not verified, showing verification modal");
+              showVerificationRequiredModal(user.email, displayName);
+              
+              // Reset login button state
+              const loginBtn = document.getElementById('login-btn');
+              loginBtn.textContent = 'Login';
+              loginBtn.disabled = false;
+              
+              return; // Stop execution here - don't log in unverified users
+            }
+            
+            // Email is verified, set login status and user data in localStorage
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('userName', displayName);
+            localStorage.setItem('userPhoto', photoURL);
+            localStorage.setItem('emailVerified', user.emailVerified);
+            
+            // Show success message
+            showSuccessMessage(displayName);
+            
+            // Update user data in Firestore
+            const userDocRef = doc(db, "users", user.uid);
+            getDoc(userDocRef).then((docSnap) => {
+              if (docSnap.exists()) {
+                // Update last login
+                setDoc(userDocRef, { 
+                  lastLogin: serverTimestamp(),
+                  emailVerified: user.emailVerified
+                }, { merge: true })
+                .catch(e => console.error("Error updating last login:", e));
+              } else {
+                // Create new user document
+                setDoc(userDocRef, {
+                  displayName: displayName,
+                  email: user.email,
+                  createdAt: serverTimestamp(),
+                  lastLogin: serverTimestamp(),
+                  photoURL: photoURL,
+                  emailVerified: user.emailVerified
+                }).catch(e => console.error("Error creating user document:", e));
+              }
+            }).catch(e => console.error("Error getting user doc:", e));
+          })
+          .catch((error) => {
+            console.error("Login error:", error.code, error.message);
+            
+            // Reset login button state
+            const loginBtn = document.getElementById('login-btn');
+            loginBtn.textContent = 'Login';
+            loginBtn.disabled = false;
+            
+            switch (error.code) {
+              case 'auth/user-not-found':
+                showLoginFailedMessage('No account found with this email. Please check your email or sign up.');
+                break;
+              case 'auth/wrong-password':
+                showLoginFailedMessage('Incorrect password. Please try again.');
+                break;
+              case 'auth/invalid-email':
+                showLoginFailedMessage('Invalid email format. Please use a valid email address.');
+                break;
+              case 'auth/too-many-requests':
+                showLoginFailedMessage('Too many failed attempts. Try again later or reset your password.');
+                break;
+              default:
+                showLoginFailedMessage(`Login failed: ${error.message}`);
+            }
+          });
+      }
+      
+      // Make the login function available globally
+      window.loginWithEmailAndPassword = loginWithEmailAndPassword;
+      
+      // Make sure Firebase functions are globally available
+      window.auth = auth;
+      window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+      window.getDoc = getDoc;
+      window.setDoc = setDoc;
+      window.doc = doc;
+      window.serverTimestamp = serverTimestamp;
+      window.db = db;
+      window.sendPasswordResetEmail = sendPasswordResetEmail;
+      window.sendEmailVerification = sendEmailVerification;
+      
+      // Email Login button handler - RESTORED
+      function setupLoginButtonHandler() {
+        const loginBtn = document.getElementById('login-btn');
+        if (!loginBtn) {
+          console.error("Login button not found when setting up event handler");
+          return;
+        }
+        
+        // Remove any existing event listeners to prevent duplicates
+        loginBtn.removeEventListener('click', handleLoginBtnClick);
+        
+        // Add our event listener
+        loginBtn.addEventListener('click', handleLoginBtnClick);
+        
+        console.log("Login button click handler attached");
+      }
+      
+      // Click handler logic to make it reusable - RESTORED
+      function handleLoginBtnClick(e) {
+        e.preventDefault(); // Prevent default form submission
+        console.log("Login button click event handler triggered");
+        
+        const email = document.getElementById('login-email').value.trim().toLowerCase();
+        const password = document.getElementById('login-password').value;
+        let isValid = true;
+
+        clearAllErrors();
+        clearLoginFailedMessage();
+        
+        if (!email) {
+          showError('login-email-error', 'Email is required');
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          showError('login-email-error', 'Please enter a valid email');
+          isValid = false;
+        }
+
+        if (!password) {
+          showError('login-password-error', 'Password is required');
+          isValid = false;
+        }
+
+        if (isValid) {
+          console.log("Form validation passed, attempting login");
+          
+          // Show loading state on button
+          const loginBtn = document.getElementById('login-btn');
+          loginBtn.textContent = 'Logging in...';
+          loginBtn.disabled = true;
+          
+          loginWithEmailAndPassword(email, password);
+        } else {
+          console.log("Form validation failed");
+        }
+      }
+
+      let countdownInterval;
+      
+      function resetForm() {
+        if (document.querySelector('form')) {
+          document.querySelector('form').reset();
+          if (document.querySelectorAll('.otp-input')) {
+            document.querySelectorAll('.otp-input').forEach(input => {
+              input.value = '';
+            });
+          }
+        }
+      }
+      
+      // Function to show success message
+      function showSuccessMessage(username) {
+        // Clear any existing intervals
+        if (countdownInterval) clearInterval(countdownInterval);
+        
+        resetForm();
+        
+        const successContainer = document.createElement('div');
+        successContainer.id = 'success-message';
+        successContainer.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(255, 255, 255, 0.95);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          font-family: 'Poppins', sans-serif;
+        `;
+
+        // Create visual elements for success message
+        const iconColor = '#4ade80'; // Green success color
+        const successAction = document.body.classList.contains('signup-mode') ? 'Registration' : 'Login';
+        
+        successContainer.innerHTML = `
+          <div style="text-align: center; max-width: 400px; padding: 1.5rem;">
+            <div style="background-color: ${iconColor}; width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 1rem; animation: scaleIn 0.4s ease-out;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h2 style="color: #111827; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; animation: fadeInUp 0.5s ease-out 0.1s both;">${successAction} Successful!</h2>
+            <p style="color: #4b5563; font-size: 1rem; margin-bottom: 1rem; animation: fadeInUp 0.5s ease-out 0.2s both;">Welcome, ${username || 'User'}!</p>
+            <p style="color: #4b5563; margin-bottom: 1.5rem; animation: fadeInUp 0.5s ease-out 0.3s both;">Redirecting to home page in <span id="countdown">2</span> seconds...</p>
+            <button id="continue-btn" style="background-color: #2563eb; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; transition: all 0.2s; animation: fadeInUp 0.5s ease-out 0.4s both; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);">Continue Now</button>
+          </div>
+          <style>
+            @keyframes fadeInUp {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes scaleIn {
+              from { transform: scale(0); opacity: 0; }
+              to { transform: scale(1); opacity: 1; }
+            }
+            #continue-btn:hover {
+              background-color: #1d4ed8;
+              transform: translateY(-2px);
+              box-shadow: 0 6px 10px -1px rgba(37, 99, 235, 0.3);
+            }
+            #continue-btn:active {
+              transform: translateY(0);
+            }
+          </style>
+        `;
+
+        document.body.appendChild(successContainer);
+
+        // Use the same countdown for both login and signup (2 seconds)
+        let counter = 2;
+        
+        // Set up countdown timer with the same behavior
+        countdownInterval = setInterval(() => {
+          counter--;
+          document.getElementById('countdown').textContent = counter;
+          
+          if (counter <= 0) {
+            clearInterval(countdownInterval);
+            redirectToHomepage();
+          }
+        }, 1000);
+
+        // Setup the continue button with the same behavior
+        document.getElementById('continue-btn').addEventListener('click', () => {
+          clearInterval(countdownInterval);
+          redirectToHomepage();
+        });
+      }
+      
+      // Function to redirect to home page
+      function redirectToHomepage() {
+        console.log("Redirecting after login");
+        
+        // Check for returnUrl parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnUrl = urlParams.get('returnUrl');
+        
+        // Default redirect location is the home page
+        let redirectLocation = '../../index.html';
+        
+        // If returnUrl is present, use it instead
+        if (returnUrl) {
+          try {
+            // Decode the URL (it might be double-encoded)
+            redirectLocation = decodeURIComponent(returnUrl);
+            console.log("Redirecting to:", redirectLocation);
+          } catch (error) {
+            console.error("Error decoding returnUrl:", error);
+          }
+        }
+        
+        // Apply a fade-out effect before redirecting
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+          successMessage.style.transition = 'opacity 0.5s ease';
+          successMessage.style.opacity = '0';
+          
+          // Wait for animation to complete before redirecting
+          setTimeout(() => {
+            window.location.href = redirectLocation;
+          }, 500);
+        } else {
+          // If no success message exists, redirect immediately
+          window.location.href = redirectLocation;
+        }
+      }
+      
+      // Initialize page
+      function initPage() {
+        console.log("Initializing login page...");
+        
+        // Check if already logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userEmail = localStorage.getItem('userEmail');
+        console.log("LocalStorage login status:", isLoggedIn, "User email:", userEmail);
+        
+        // If already logged in, redirect to home page
+        if (isLoggedIn === 'true' && userEmail) {
+          console.log("User already logged in, redirecting to home page");
+          window.location.href = "../../index.html";
+          return;
+        }
+        
+        // Check if we're in signup form and hide video if needed
+        const signupFormEl = document.getElementById('signup-form');
+        const videoSection = document.querySelector('.video-section');
+        
+        if (signupFormEl && signupFormEl.style.display === 'block' && videoSection) {
+          console.log("Signup form is displayed, hiding video section");
+          videoSection.style.display = 'none';
+        }
+        
+        // Check for URL parameters indicating signup mode
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('signup') && urlParams.get('signup') === 'true') {
+          // Force signup mode
+          if (showSignupLink) showSignupLink.click();
+        }
+      }
+      
+      // Run initialization after DOM is fully loaded
+      document.addEventListener('DOMContentLoaded', initPage);
+      
+      // Also initialize immediately if DOM is already loaded
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        console.log("DOM already loaded, initializing immediately");
+        initPage();
+      }
+
+      // Immediate check for signup form display and hide video if needed
+      (function() {
+        // Check if URL has signup parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('signup') && urlParams.get('signup') === 'true') {
+          console.log("URL indicates signup mode - activating signup form immediately");
+          setTimeout(showSignupForm, 0);
+        }
+      })();
+
+      // Helper function to show login failed message
+      function showLoginFailedMessage(message) {
+        const loginFailedMessage = document.getElementById('login-failed-message');
+        loginFailedMessage.textContent = message;
+        loginFailedMessage.style.display = 'block';
+      }
+      
+      // Helper function to clear login failed message
+      function clearLoginFailedMessage() {
+        const loginFailedMessage = document.getElementById('login-failed-message');
+        loginFailedMessage.textContent = '';
+        loginFailedMessage.style.display = 'none';
+      }
+
+      // Password Reset functionality
+      const forgotPasswordLink = document.getElementById('forgot-password-link');
+      const forgotPasswordModal = document.getElementById('forgot-password-modal');
+      const modalClose = document.getElementById('modal-close');
+      const resetPasswordBtn = document.getElementById('reset-password-btn');
+      const resetEmail = document.getElementById('reset-email');
+      const resetEmailError = document.getElementById('reset-email-error');
+      const resetSuccessMessage = document.getElementById('reset-success-message');
+      const resetErrorMessage = document.getElementById('reset-error-message');
+
+      // Show modal when "Forgot Password" is clicked
+      forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Pre-fill with email from login form if available
+        const loginEmail = document.getElementById('login-email').value;
+        if (loginEmail) {
+          resetEmail.value = loginEmail;
+        }
+        forgotPasswordModal.style.display = 'flex';
+      });
+
+      // Close modal when X is clicked
+      modalClose.addEventListener('click', () => {
+        forgotPasswordModal.style.display = 'none';
+        resetEmail.value = '';
+        resetEmailError.style.display = 'none';
+        resetSuccessMessage.style.display = 'none';
+        resetErrorMessage.style.display = 'none';
+      });
+
+      // Close modal when clicking outside of it
+      window.addEventListener('click', (e) => {
+        if (e.target === forgotPasswordModal) {
+          forgotPasswordModal.style.display = 'none';
+          resetEmail.value = '';
+          resetEmailError.style.display = 'none';
+          resetSuccessMessage.style.display = 'none';
+          resetErrorMessage.style.display = 'none';
+        }
+      });
+
+      // Handle reset password button click
+      resetPasswordBtn.addEventListener('click', () => {
+        const email = resetEmail.value.trim();
+        
+        // Reset previous messages
+        resetEmailError.style.display = 'none';
+        resetSuccessMessage.style.display = 'none';
+        resetErrorMessage.style.display = 'none';
+        
+        // Validate email
+        if (!email) {
+          resetEmailError.textContent = 'Please enter your email address';
+          resetEmailError.style.display = 'block';
+          return;
+        }
+        
+        if (!validateEmail(email)) {
+          resetEmailError.textContent = 'Please enter a valid email address';
+          resetEmailError.style.display = 'block';
+          return;
+        }
+        
+        // Show loading state
+        resetPasswordBtn.textContent = 'Sending...';
+        resetPasswordBtn.disabled = true;
+        
+        // Send password reset email
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            resetSuccessMessage.textContent = 'Password reset email sent! Check your inbox.';
+            resetSuccessMessage.style.display = 'block';
+            resetPasswordBtn.textContent = 'Send Reset Link';
+            resetPasswordBtn.disabled = false;
+            
+            // Close modal after 3 seconds
+            setTimeout(() => {
+              forgotPasswordModal.style.display = 'none';
+              resetEmail.value = '';
+              resetEmailError.style.display = 'none';
+              resetSuccessMessage.style.display = 'none';
+              resetErrorMessage.style.display = 'none';
+            }, 3000);
+          })
+          .catch((error) => {
+            resetErrorMessage.textContent = getResetErrorMessage(error.code);
+            resetErrorMessage.style.display = 'block';
+            resetPasswordBtn.textContent = 'Send Reset Link';
+            resetPasswordBtn.disabled = false;
+          });
+      });
+      
+      // Get user-friendly error message for password reset
+      function getResetErrorMessage(errorCode) {
+        switch (errorCode) {
+          case 'auth/user-not-found':
+            return 'No account found with this email address.';
+          case 'auth/invalid-email':
+            return 'Please enter a valid email address.';
+          case 'auth/too-many-requests':
+            return 'Too many attempts. Please try again later.';
+          default:
+            return 'Error sending reset email. Please try again later.';
+        }
+      }
+
+      // Signup functionality with Email OTP verification - RESTORED
+      document.getElementById('signup-btn').addEventListener('click', async () => {
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim().toLowerCase();
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-confirm').value;
+        let isValid = true;
+
+        clearAllErrors();
+        console.log("Attempting signup with email:", email);
+
+        if (!name) {
+          showError('signup-name-error', 'Name is required');
+          isValid = false;
+        }
+
+        if (!email) {
+          showError('signup-email-error', 'Email is required');
+          isValid = false;
+        } else if (!validateEmail(email)) {
+          showError('signup-email-error', 'Please enter a valid email');
+          isValid = false;
+        }
+
+        if (!password) {
+          showError('signup-password-error', 'Password is required');
+          isValid = false;
+        } else if (password.length < 6) {
+          showError('signup-password-error', 'Password must be at least 6 characters');
+          isValid = false;
+        }
+
+        if (!confirmPassword) {
+          showError('signup-confirm-error', 'Please confirm your password');
+          isValid = false;
+        } else if (password !== confirmPassword) {
+          showError('signup-confirm-error', 'Passwords do not match');
+          isValid = false;
+        }
+
+        if (isValid) {
+          try {
+            // Create the account directly without OTP verification
+            console.log("Creating user account with email:", email);
+            
+            // Show loading state
+            document.getElementById('signup-btn').textContent = 'Creating Account...';
+            document.getElementById('signup-btn').disabled = true;
+            
+            try {
+              // Create user in Firebase
+              const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+              console.log("User created successfully in Firebase Auth");
+              
+              // Update user profile immediately
+              await updateProfile(userCredential.user, {
+                displayName: name,
+                photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`
+              });
+              
+              console.log("User profile updated with display name");
+              
+              // Send email verification
+              try {
+                await sendEmailVerification(userCredential.user);
+                console.log("Verification email sent successfully");
+                
+                // Show verification required modal
+                showVerificationRequiredModal(email, name);
+                verificationModalDisplayed = true;
+              } catch (verificationError) {
+                console.error("Error sending verification email:", verificationError);
+                // Continue anyway since the account was created
+              }
+              
+              // Add to Firestore
+              try {
+                const userDocRef = doc(db, "users", userCredential.user.uid);
+                await setDoc(userDocRef, {
+                  displayName: name,
+                  email: email,
+                  createdAt: serverTimestamp(),
+                  lastLogin: serverTimestamp(),
+                  emailVerified: false // We now require email verification
+                });
+                
+                console.log("User data saved to Firestore database");
+              } catch (dbError) {
+                console.error("Error saving user to database:", dbError);
+              }
+              
+              // DON'T set login status in localStorage until email is verified
+              // localStorage.setItem('isLoggedIn', 'true') - REMOVED
+              // localStorage.setItem('userEmail', email) - REMOVED
+              // localStorage.setItem('userName', name) - REMOVED
+              // localStorage.setItem('userPhoto', `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`) - REMOVED
+              
+              // Only show verification modal, not success message
+              if (!verificationModalDisplayed) {
+                showVerificationRequiredModal(email, name);
+              }
+              
+            } catch (authError) {
+              console.error("Error creating user:", authError.code, authError.message);
+              
+              // Reset button state
+              document.getElementById('signup-btn').textContent = 'Create Account';
+              document.getElementById('signup-btn').disabled = false;
+              
+              // Provide more specific error messages based on Firebase error codes
+              if (authError.code === 'auth/email-already-in-use') {
+                showError('signup-email-error', 'This email is already registered. Please try logging in instead.');
+              } else if (authError.code === 'auth/invalid-email') {
+                showError('signup-email-error', 'Invalid email format. Please use a valid email address.');
+              } else if (authError.code === 'auth/weak-password') {
+                showError('signup-password-error', 'Password is too weak. Please use a stronger password.');
+              } else {
+                showError('signup-email-error', `Account creation failed: ${authError.message}`);
+              }
+            }
+          } catch (error) {
+            console.error("Error during signup process:", error);
+            showError('signup-email-error', error.message || 'Error creating account. Please try again.');
+            
+            // Reset button state
+            document.getElementById('signup-btn').textContent = 'Create Account';
+            document.getElementById('signup-btn').disabled = false;
+          }
+        }
+      });
+
+      // Function to show email verification required modal
+      function showVerificationRequiredModal(email, name) {
+        // Create modal container
+        const modalContainer = document.createElement('div');
+        modalContainer.id = 'verification-modal';
+        modalContainer.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+        `;
+        
+        // Create modal content
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+          background-color: white;
+          border-radius: 8px;
+          padding: 25px;
+          max-width: 450px;
+          width: 90%;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+          text-align: center;
+          font-family: 'Inter', sans-serif;
+        `;
+        
+        // Add content
+        modalContent.innerHTML = `
+          <div style="margin-bottom: 20px;">
+            <div style="color: #2563eb; font-size: 48px; margin-bottom: 10px;">✉️</div>
+            <h3 style="font-size: 20px; margin-bottom: 10px; color: #111827;">Verify Your Email</h3>
+            <p style="color: #4b5563; margin-bottom: 15px; font-size: 14px;">
+              We've sent a verification link to <strong style="word-break: break-all;">${email}</strong>.
+              Please check your inbox and click the link to verify your email address.
+            </p>
+            <p style="color: #4b5563; margin-bottom: 20px; font-size: 14px;">
+              You may need to check your spam folder if you don't see the email.
+            </p>
+            <p style="color: #10b981; font-size: 14px; margin-bottom: 20px;" id="auto-check-status">
+              Checking for verification <span id="verification-dots">.</span>
+            </p>
+          </div>
+          <button id="resend-verification-btn" style="background-color: transparent; color: #2563eb; border: 1px solid #2563eb; padding: 10px 15px; border-radius: 5px; font-weight: 500; cursor: pointer; margin-bottom: 20px; width: 100%;">
+            Resend Verification Email
+          </button>
+          <button id="done-verifying-btn" style="background-color: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-weight: 500; cursor: pointer; margin-bottom: 10px; width: 100%;">
+            Done Verification
+          </button>
+        `;
+        
+        modalContainer.appendChild(modalContent);
+        document.body.appendChild(modalContainer);
+
+        // Animation for the verification dots
+        let dotCount = 0;
+        const dotsInterval = setInterval(() => {
+          const dots = document.getElementById('verification-dots');
+          if (dots) {
+            dotCount = (dotCount + 1) % 4;
+            dots.textContent = '.'.repeat(dotCount + 1);
+          }
+        }, 500);
+        
+        // Continuously check for email verification automatically
+        let verificationCheckInterval;
+        const startAutoVerificationCheck = () => {
+          // Clear any existing interval
+          if (verificationCheckInterval) clearInterval(verificationCheckInterval);
+          
+          // Set up new interval to check every 3 seconds
+          verificationCheckInterval = setInterval(() => {
+            const user = auth.currentUser;
+            if (user) {
+              // Reload user to get fresh verification status
+              user.reload().then(() => {
+                if (user.emailVerified) {
+                  // Email is verified - show success message and continue
+                  clearInterval(verificationCheckInterval);
+                  clearInterval(dotsInterval);
+                  
+                  const statusElement = document.getElementById('auto-check-status');
+                  if (statusElement) {
+                    statusElement.textContent = 'Email Verified Successfully !';
+                    statusElement.style.color = '#10b981';
+                  }
+                  
+                  // Wait a moment to show the success message before redirecting
+                  setTimeout(() => {
+                    // Remove modal
+                    document.body.removeChild(modalContainer);
+                    verificationModalDisplayed = false;
+                    
+                    // NOW we can set login status after verification
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userName', name || email.split('@')[0]);
+                    localStorage.setItem('userPhoto', `https://ui-avatars.com/api/?name=${encodeURIComponent(name || email.split('@')[0])}&background=2563eb&color=fff`);
+                    localStorage.setItem('emailVerified', 'true');
+                    
+                    // Show success message and redirect
+                    showSuccessMessage(name || email.split('@')[0]);
+                  }, 1500);
+                }
+              }).catch(error => {
+                console.error("Error checking verification status:", error);
+              });
+            }
+          }, 3000);
+        };
+        
+        // Start the auto-verification check
+        startAutoVerificationCheck();
+        
+        // Add event listeners
+        document.getElementById('resend-verification-btn').addEventListener('click', async () => {
+          const resendBtn = document.getElementById('resend-verification-btn');
+          resendBtn.textContent = 'Sending...';
+          resendBtn.disabled = true;
+          
+          try {
+            // Get current user
+            const user = auth.currentUser;
+            if (user) {
+              await sendEmailVerification(user);
+              
+              // Show success message
+              resendBtn.textContent = 'Email Sent!';
+              
+              // Restart the verification check
+              startAutoVerificationCheck();
+              
+              setTimeout(() => {
+                resendBtn.textContent = 'Resend Verification Email';
+                resendBtn.disabled = false;
+              }, 3000);
+            } else {
+              // User not found (signed out)
+              resendBtn.textContent = 'Error - Please Sign In';
+              setTimeout(() => {
+                resendBtn.textContent = 'Resend Verification Email';
+                resendBtn.disabled = false;
+              }, 3000);
+            }
+          } catch (error) {
+            console.error("Error resending verification email:", error);
+            resendBtn.textContent = 'Try Again Later';
+            setTimeout(() => {
+              resendBtn.textContent = 'Resend Verification Email';
+              resendBtn.disabled = false;
+            }, 3000);
+          }
+        });
+        
+        document.getElementById('done-verifying-btn').addEventListener('click', () => {
+          // Stop the intervals
+          clearInterval(verificationCheckInterval);
+          clearInterval(dotsInterval);
+          
+          // Check if email is actually verified
+          const user = auth.currentUser;
+          if (user) {
+            // Reload user to get fresh verification status
+            user.reload().then(() => {
+              if (user.emailVerified) {
+                // Email is verified - NOW we can set login status
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userName', name || email.split('@')[0]);
+                localStorage.setItem('userPhoto', `https://ui-avatars.com/api/?name=${encodeURIComponent(name || email.split('@')[0])}&background=2563eb&color=fff`);
+                localStorage.setItem('emailVerified', 'true');
+                
+                // Show success message and redirect
+                document.body.removeChild(modalContainer);
+                verificationModalDisplayed = false;
+                showSuccessMessage(name || email.split('@')[0]);
+                return;
+              } else {
+                // Email is not verified - show warning message
+                const verifyMessage = document.createElement('p');
+                verifyMessage.style.cssText = `
+                  color: #dc2626;
+                  font-size: 14px;
+                  margin-top: 10px;
+                  margin-bottom: 0;
+                  padding: 8px;
+                  background-color: rgba(220, 38, 38, 0.1);
+                  border-radius: 5px;
+                `;
+                verifyMessage.textContent = "Your email is not verified yet. Please check your inbox and click the verification link before proceeding.";
+                
+                // Add the message to the modal if it doesn't exist
+                if (!document.getElementById('verify-warning')) {
+                  verifyMessage.id = 'verify-warning';
+                  modalContent.appendChild(verifyMessage);
+                }
+                
+                // Don't allow proceeding without verification
+                return;
+              }
+            }).catch(error => {
+              console.error("Error reloading user:", error);
+              // Show error message
+              const errorMessage = document.createElement('p');
+              errorMessage.style.cssText = `
+                color: #dc2626;
+                font-size: 14px;
+                margin-top: 10px;
+                margin-bottom: 0;
+                padding: 8px;
+                background-color: rgba(220, 38, 38, 0.1);
+                border-radius: 5px;
+              `;
+              errorMessage.textContent = "Error checking verification status. Please try again.";
+              
+              if (!document.getElementById('verify-error')) {
+                errorMessage.id = 'verify-error';
+                modalContent.appendChild(errorMessage);
+              }
+            });
+          } else {
+            // No current user, show error
+            const noUserMessage = document.createElement('p');
+            noUserMessage.style.cssText = `
+              color: #dc2626;
+              font-size: 14px;
+              margin-top: 10px;
+              margin-bottom: 0;
+              padding: 8px;
+              background-color: rgba(220, 38, 38, 0.1);
+              border-radius: 5px;
+            `;
+            noUserMessage.textContent = "Error: User session not found. Please refresh the page and try again.";
+            
+            if (!document.getElementById('no-user-error')) {
+              noUserMessage.id = 'no-user-error';
+              modalContent.appendChild(noUserMessage);
+            }
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // Only keep what's necessary
+        console.log("DOM loaded - initializing login page");
+        
+        // Simple check for URL parameters for signup mode
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('signup') && urlParams.get('signup') === 'true') {
+          console.log("URL indicates signup mode - showing signup form");
+          setTimeout(showSignupForm, 100);
+        }
+        
+        // Check if we're already logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userEmail = localStorage.getItem('userEmail');
+        if (isLoggedIn === 'true' && userEmail) {
+          console.log("User already logged in, redirecting to home page");
+          window.location.href = "../../index.html";
+          return;
+        }
+        
+        // Initialize any other elements as needed
+        const loginEmailTab = document.getElementById('login-email-tab');
+        if (loginEmailTab) loginEmailTab.classList.add('active');
+      });
+
+      // Make the toggle functions globally available
+      window.showSignupForm = showSignupForm;
+      window.showLoginForm = showLoginForm;
+    </script>
+</body>
+</html>

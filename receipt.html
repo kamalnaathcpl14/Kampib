@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAMPIB - Receipt</title>
+    <!-- Firebase SDK -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+      
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCaBeXSDnDt2Fy5M323rd351TADllFstTc",
+        authDomain: "kampibdb.firebaseapp.com",
+        projectId: "kampibdb",
+        storageBucket: "kampibdb.firebasestorage.app",
+        messagingSenderId: "476887652024",
+        appId: "1:476887652024:web:7773176f2095c2627fc64d"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      
+      console.log("Firebase initialized successfully");
+      
+      // Make db and Firebase functions globally available
+      window.db = db;
+      window.collection = collection;
+      window.addDoc = addDoc;
+      
+      // Store order data function
+      window.saveOrderToFirebase = async function(orderData) {
+        console.log("Saving order data to Firebase:", orderData);
+        try {
+          const ordersCollection = collection(db, "orders");
+          const docRef = await addDoc(ordersCollection, orderData);
+          console.log("Order saved successfully with ID:", docRef.id);
+          return true;
+        } catch (error) {
+          console.error("Error saving order data to Firebase:", error);
+          return false;
+        }
+      };
+    </script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #60a5fa;
+            --success-color: #10b981;
+            --success-light: #a7f3d0;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --gradient-start: #2563eb;
+            --gradient-end: #1d4ed8;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid var(--success-light);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            text-align: center;
+            transform-style: preserve-3d;
+            animation: floatIn 0.8s ease-out forwards;
+        }
+
+        @keyframes floatIn {
+            0% { opacity: 0; transform: translateY(20px) rotateX(-10deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        .success-icon {
+            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseGlow 2s infinite;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .success-icon::before {
+            content: "✓";
+            color: white;
+            font-size: 28px;
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .receipt {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
+                        0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            padding: 40px;
+            margin-bottom: 32px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .receipt:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08),
+                        0 8px 10px -6px rgba(0, 0, 0, 0.03);
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .receipt-header::after {
+            content: "";
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 3px;
+        }
+
+        .receipt-header h1 {
+            color: var(--text-color);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .receipt-header p {
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .receipt-section {
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 0;
+        }
+
+        .receipt-section:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-color);
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+        }
+
+        .receipt-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .receipt-value {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .receipt-total {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .receipt-total .receipt-row {
+            margin: 8px 0;
+        }
+
+        .receipt-total .receipt-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .order-status {
+            display: none;
+        }
+
+        .status-step {
+            display: none;
+        }
+
+        .status-step::after {
+            display: none;
+        }
+
+        .status-icon {
+            display: none;
+        }
+
+        .status-text {
+            display: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .button {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 160px;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2),
+                        0 2px 4px -1px rgba(37, 99, 235, 0.1);
+        }
+
+        .button-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(37, 99, 235, 0.2),
+                        0 4px 6px -2px rgba(37, 99, 235, 0.1);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button-primary:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--gradient-start));
+        }
+
+        .button-secondary:hover {
+            border-color: var(--primary-color);
+            background: #f8fafc;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .receipt {
+                box-shadow: none;
+                padding: 20px;
+            }
+
+            .actions, .button {
+                display: none;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .delivery-highlight {
+            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+            border: 1px solid #bfdbfe;
+        }
+
+        .delivery-highlight h3 {
+            color: var(--primary-color);
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .delivery-highlight p {
+            margin: 0;
+            color: #1e40af;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container animate-in">
+        <div class="success-banner">
+            <div class="success-icon"></div>
+            <h2 style="font-size: 24px; margin: 0 0 12px; color: var(--success-color);">Thank You for Your Order!</h2>
+            <p style="font-size: 16px; color: #059669; margin: 0;">Your order has been successfully placed and confirmed.</p>
+        </div>
+
+        <div class="receipt">
+            <div class="receipt-header">
+                <h1>Order Confirmation</h1>
+                <p>Keep this receipt for your records</p>
+            </div>
+
+            <div class="receipt-section">
+                <div class="receipt-section-title">Order Details</div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Order Number:</span>
+                    <span class="receipt-value" id="invoiceNumber"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Transaction ID:</span>
+                    <span class="receipt-value" id="transactionId"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Order Date:</span>
+                    <span class="receipt-value" id="date"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Order Time:</span>
+                    <span class="receipt-value" id="time"></span>
+                </div>
+            </div>
+
+            <div class="receipt-section">
+                <div class="receipt-section-title">Payment Information</div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Payment Mode:</span>
+                    <span class="receipt-value" id="paymentMode"></span>
+                </div>
+                <div class="receipt-total">
+                    <div class="receipt-row">
+                        <span class="receipt-label">Total Amount Paid:</span>
+                        <span class="receipt-value" id="amount"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="receipt-section">
+                <div class="receipt-section-title">Customer Information</div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Name:</span>
+                    <span class="receipt-value" id="customerName"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Email:</span>
+                    <span class="receipt-value" id="customerEmail"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Phone:</span>
+                    <span class="receipt-value" id="customerPhone"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Shipping Address:</span>
+                    <span class="receipt-value" id="customerAddress"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Product:</span>
+                    <span class="receipt-value" id="productName"></span>
+                </div>
+            </div>
+
+            <div class="delivery-highlight">
+                <h3>Estimated Delivery</h3>
+                <p id="deliveryDate">Calculating...</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="window.print()" class="button button-primary">Download Receipt</button>
+        </div>
+
+        <a href="../../../index.html" id="homeButton" class="button button-secondary" style="display: block; margin: 20px auto; text-align: center;">Go to Home</a>
+        
+    </div>
+
+    <script>
+        let deliveryDate;
+        let orderData = {};
+
+        window.onload = function() {
+            console.log("Window loaded, initializing receipt data");
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Parse timestamp and set up dates
+            const orderDate = new Date(urlParams.get('timestamp') || Date.now());
+            
+            // Generate random delivery date (1-7 days from order)
+            const daysToDelivery = Math.floor(Math.random() * 7) + 1;
+            deliveryDate = new Date(orderDate);
+            deliveryDate.setDate(deliveryDate.getDate() + daysToDelivery);
+            
+            // Format dates for display
+            const formattedOrderDate = orderDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            const formattedOrderTime = orderDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            document.getElementById('date').textContent = formattedOrderDate;
+            document.getElementById('time').textContent = formattedOrderTime;
+            
+            // Set delivery date in main receipt
+            const formattedDeliveryDate = deliveryDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('deliveryDate').textContent = `Estimated delivery by ${formattedDeliveryDate}`;
+            
+            // Set other values
+            const invoiceNumber = urlParams.get('invoice_number') || `INV/${Math.floor(1000 + Math.random() * 9000)}`; // Generate random invoice number if not present
+            const transactionId = urlParams.get('transaction_id') || `TXN${Math.floor(100000 + Math.random() * 900000)}`;
+            const paymentType = urlParams.get('payment_type') || 'Online Payment';
+            
+            document.getElementById('invoiceNumber').textContent = invoiceNumber;
+            document.getElementById('transactionId').textContent = transactionId;
+            document.getElementById('paymentMode').textContent = paymentType;
+            
+            // Set amount
+            const amount = parseFloat(urlParams.get('amount') || 0);
+            const formattedAmount = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            }).format(amount);
+            
+            document.getElementById('amount').textContent = formattedAmount;
+            
+            // Set customer information
+            const customerName = urlParams.get('customer_name') || 'Not provided';
+            const customerEmail = urlParams.get('customer_email') || 'Not provided';
+            const customerPhone = urlParams.get('customer_phone') || urlParams.get('phone') || 'Not provided';
+            const customerAddress = urlParams.get('customer_address') || 'Not provided';
+            const productName = urlParams.get('product_name') || urlParams.get('productName') || 'Product';
+            
+            document.getElementById('customerName').textContent = customerName;
+            document.getElementById('customerEmail').textContent = customerEmail;
+            document.getElementById('customerPhone').textContent = customerPhone;
+            document.getElementById('customerAddress').textContent = customerAddress;
+            document.getElementById('productName').textContent = productName;
+            
+            // Prepare order data for Firebase
+            orderData = {
+                invoiceNumber: invoiceNumber,
+                transactionId: transactionId,
+                orderDate: formattedOrderDate,
+                orderTime: formattedOrderTime,
+                estimatedDeliveryDate: formattedDeliveryDate,
+                paymentMode: paymentType,
+                amount: amount,
+                createdAt: new Date().toISOString(),
+                customerName: customerName,
+                customerEmail: customerEmail,
+                customerPhone: customerPhone,
+                customerAddress: customerAddress,
+                productName: productName
+            };
+            
+            console.log("Order data prepared:", orderData);
+            
+            // Add event listener to the home button
+            const homeButton = document.getElementById('homeButton');
+            if (homeButton) {
+                homeButton.addEventListener('click', function(event) {
+                    // Simply navigate to home page without saving data
+                    window.location.href = "../../../index.html";
+                });
+            }
+        };
+    </script>
+</body>
+</html> 
